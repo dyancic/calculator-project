@@ -1,3 +1,9 @@
+@font-face {
+    font-family: "digital-clock-font";
+    src: url("./font/digital-clock-font.ttf");
+}
+@import url("https://fonts.googleapis.com/css2?family=Comfortaa:wght@500&family=Faustina&family=IBM+Plex+Mono:wght@200;300&family=Poppins&display=swap");
+
 * {
     padding: 0;
     margin: 0;
@@ -19,16 +25,33 @@ body {
 
     height: 600px;
     width: 330px;
-    background-color: beige;
+    background-color: #aeb39f;
+
     border-radius: 8px;
 
     &__screen {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        align-items: flex-end;
         width: 326px;
         height: 180px;
         background-color: black;
         margin-top: 2px;
         border-radius: 8px;
         border: 7px double rgb(212, 212, 212);
+        font-family: "digital-clock-font";
+        color: green;
+    }
+
+    &__input {
+        font-size: 62px;
+        margin-right: 10px;
+    }
+
+    &__output {
+        font-size: 20px;
+        margin-right: 10px;
     }
 
     &__button-container {
@@ -51,7 +74,6 @@ body {
         flex-wrap: wrap;
 
         width: 195px;
-        background-color: black;
     }
 
     &__operator {
@@ -61,15 +83,53 @@ body {
     }
 
     &__button {
+        position: relative;
         width: 65px;
         height: 65px;
+        color: black;
+        border-radius: 5px;
+        background: linear-gradient(180deg, #bfc8bf, #5f615f);
+    }
+
+    &__button::before {
+        content: "";
+        position: absolute;
+        border-radius: 5px;
+        top: 3px;
+        right: 4px;
+        bottom: 8px;
+        left: 6px;
+        background: linear-gradient(90deg, #bfc8bf, #7f807f);
+        box-shadow: -10px -10px 10px (255, 255, 255, 0.25);
     }
 
     &__button--lg {
         width: 97.5px;
+        background: linear-gradient(180deg, #3265a7, #1d3b63);
+        color: white;
+    }
+
+    &__button--lg::before {
+        background: linear-gradient(90deg, #3265a7, #1d3b63);
     }
 
     &__button--sm {
-        height: 45px;
+        height: 55px;
     }
+}
+
+#buttonMinus {
+    background: linear-gradient(180deg, #bd2f35, #6d191d);
+    color: white;
+}
+
+#buttonMinus::before {
+    background: linear-gradient(90deg, #bd2f35, #6d191d);
+}
+
+span {
+    position: relative;
+    font-family: "Poppins", sans-serif;
+    font-weight: 900;
+    font-stretch: extra-expanded;
 }
