@@ -14,6 +14,7 @@
 
     - Store the values for calculations.
     - maximum 8 numbers or operators on the calculator at a time
+    - add keyboard functionality
 
 3. Write functions for each math operation
 
