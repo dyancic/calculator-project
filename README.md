@@ -6,7 +6,7 @@
 
 1. Make a html/css replica of the image above.
 
-    - Analog style font.
+    - Digital style font.
     - replace some keys so that each operator has a specific button.
     -
 
