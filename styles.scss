@@ -18,43 +18,74 @@ body {
     height: 100vh;
 }
 
+//add a ::before pseudoclass to create depth and shadow for the calculator
 .calc {
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
 
     height: 600px;
-    width: 330px;
-    background-color: #aeb39f;
+    width: 333px;
+    background: linear-gradient(225deg, #aeb39f 10%, #504940 70%);
+    border-radius: 10px;
+    box-shadow: -5px 15px 12px 5px #0d0d0e;
 
-    border-radius: 8px;
+    &--before::before {
+        position: absolute;
+        content: " ";
+        border-radius: 8px;
+        top: 3px;
+        right: 3px;
+        bottom: 30px;
+        left: 8px;
+        background-color: #aeb39f;
+        box-shadow: -1px 4px 3px 1px #aeb39f;
+    }
 
     &__screen {
+        position: relative;
+        left: 2px;
         display: flex;
         flex-direction: column;
         justify-content: flex-end;
         align-items: flex-end;
         width: 326px;
         height: 180px;
-        background-color: black;
+        background: rgb(0, 0, 0);
+        background: linear-gradient(
+            0deg,
+            rgb(27, 27, 27) 0%,
+            rgb(0, 23, 3) 20%,
+            rgb(20, 20, 20) 70%
+        );
         margin-top: 2px;
-        border-radius: 8px;
-        border: 7px double rgb(212, 212, 212);
+        border-radius: 10px;
+        border: 7px double #aeb39f;
         font-family: "digital-clock-font";
-        color: green;
+        color: #35f3ba;
+        box-shadow: -1px 8px 5px 2px #3f3f3f;
     }
 
     &__input {
         font-size: 62px;
-        margin-right: 10px;
+        margin-right: 7px;
+        height: 70px;
     }
 
     &__output {
         font-size: 20px;
         margin-right: 10px;
+        max-width: 250px;
+        max-height: 92px;
+        vertical-align: bottom;
+        text-align: right;
     }
 
     &__button-container {
+        position: relative;
+        top: 10px;
+        left: 2px;
         display: flex;
         flex-flow: column wrap;
         justify-content: space-between;
@@ -72,11 +103,10 @@ body {
     &__number-box {
         display: flex;
         flex-wrap: wrap;
-
         width: 195px;
     }
 
-    &__operator {
+    &__operator-box {
         display: flex;
         flex-direction: column;
         align-self: flex-end;
@@ -89,6 +119,7 @@ body {
         color: black;
         border-radius: 5px;
         background: linear-gradient(180deg, #bfc8bf, #5f615f);
+        box-shadow: -2px 3px 9px 1px rgb(29, 29, 29);
     }
 
     &__button::before {
@@ -99,7 +130,7 @@ body {
         right: 4px;
         bottom: 8px;
         left: 6px;
-        background: linear-gradient(90deg, #bfc8bf, #7f807f);
+        background: linear-gradient(45deg, #bfc8bf, #7f807f);
         box-shadow: -10px -10px 10px (255, 255, 255, 0.25);
     }
 
@@ -132,4 +163,11 @@ span {
     font-family: "Poppins", sans-serif;
     font-weight: 900;
     font-stretch: extra-expanded;
+    font-size: 15px;
+}
+
+//need to add dark background behind the buttons for active effect
+button:active {
+    transform: scale(0.95);
+    transition: transform 0.05s;
 }

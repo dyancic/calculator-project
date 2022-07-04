@@ -8,36 +8,36 @@
         <title>Calculator</title>
     </head>
     <body>
-        <div class="calc">
+        <div class="calc calc--before">
             <div class="calc__screen">
-                <div class="calc__output">1 + 2 =</div>
-                <div class="calc__input">hello</div>
+                <div class="calc__output" id="calcOutput"></div>
+                <div class="calc__input" id="calcInput"></div>
             </div>
             <div class="calc__button-container">
                 <div class="calc__onoff-box">
-                    <button class="calc__button calc__button--sm" id="buttonOn"><span>ON</span></button>
-                    <button class="calc__button calc__button--sm" id="buttonOff"><span>OFF</span></button>
-                    <button class="calc__button calc__button--sm" id="buttonClear"><span>C</span></button>
+                    <button class="calc__button calc__button--sm" id="buttonOn" onclick="onOff()"><span>ON</span></button>
+                    <button class="calc__button calc__button--sm" id="buttonOff" onclick="onOff()"><span>OFF</span></button>
+                    <button class="calc__button calc__button--sm" id="buttonClear" onclick="clearInput(0)"><span>C</span></button>
                 </div>
                 <div class="calc__number-box">
-                    <button class="calc__button" id="buttonSeven"><span>7</span></button>
-                    <button class="calc__button" id="buttonEight"><span>8</span></button>
-                    <button class="calc__button" id="buttonNine"><span>9</span></button>
-                    <button class="calc__button" id="buttonFour"><span>4</span></button>
-                    <button class="calc__button" id="buttonFive"><span>5</span></button>
-                    <button class="calc__button" id="buttonSix"><span>6</span></button>
-                    <button class="calc__button" id="buttonOne"><span>1</span></button>
-                    <button class="calc__button" id="buttonTwo"><span>2</span></button>
-                    <button class="calc__button" id="buttonThree"><span>3</span></button>
-                    <button class="calc__button calc__button--lg" id="buttonZero"><span>0</span></button>
-                    <button class="calc__button calc__button--lg" id="buttonDecimal"><span>.</span></button>
+                    <button class="calc__button calc__number" id="buttonSeven" onclick="onNumberClick(7)"><span>7</span></button>
+                    <button class="calc__button calc__number" id="buttonEight" onclick="onNumberClick(8)"><span>8</span></button>
+                    <button class="calc__button calc__number" id="buttonNine" onclick="onNumberClick(9)"><span>9</span></button>
+                    <button class="calc__button calc__number" id="buttonFour" onclick="onNumberClick(4)"><span>4</span></button>
+                    <button class="calc__button calc__number" id="buttonFive" onclick="onNumberClick(5)"><span>5</span></button>
+                    <button class="calc__button calc__number" id="buttonSix" onclick="onNumberClick(6)"><span>6</span></button>
+                    <button class="calc__button calc__number" id="buttonOne" onclick="onNumberClick(1)"><span>1</span></button>
+                    <button class="calc__button calc__number" id="buttonTwo" onclick="onNumberClick(2)"><span>2</span></button>
+                    <button class="calc__button calc__number" id="buttonThree" onclick="onNumberClick(3)"><span>3</span></button>
+                    <button class="calc__button calc__number calc__button--lg" id="buttonZero" onclick="onNumberClick(0)"><span>0</span></button>
+                    <button class="calc__button calc__button--lg" id="buttonDecimal" onclick="decimalClick()"><span>.</span></button>
                 </div>
-                <div class="calc__operator">
-                    <button class="calc__button" id="buttonDivide"><span>÷</span></button>
-                    <button class="calc__button" id="buttonMultiply"><span>x</span></button>
-                    <button class="calc__button" id="buttonMinus"><span>-</span></button>
-                    <button class="calc__button" id="buttonPlus"><span>+</span></button>
-                    <button class="calc__button" id="buttonEqual"><span>=</span></button>
+                <div class="calc__operator-box">
+                    <button class="calc__button" id="buttonDivide" onclick="operatorClick(' ÷ ')"><span>÷</span></button>
+                    <button class="calc__button" id="buttonMultiply" onclick="operatorClick(' x ')"><span>x</span></button>
+                    <button class="calc__button" id="buttonMinus" onclick="operatorClick(' - ')"><span>-</span></button>
+                    <button class="calc__button" id="buttonPlus" onclick="operatorClick(' + ')"><span>+</span></button>
+                    <button class="calc__button" id="buttonEqual" onclick="solveEquation()"><span>=</span></button>
                 </div>
             </div>
         </div>
