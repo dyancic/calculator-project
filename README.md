@@ -18,3 +18,4 @@
 3. Write functions for each math operation
 
     - Find a way to finish the calculation if multiple operators are used
+    -
