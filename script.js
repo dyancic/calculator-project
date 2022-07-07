@@ -15,11 +15,13 @@ const equalId = document.getElementById("buttonEqual");
 function onOff(button) {
     if (button === "on") {
         power = true;
+        inputArea.innerHTML = "HELLO";
     }
     console.log(power);
     if (button === "off") {
         power = false;
-        clearInput();
+        clearInput(true);
+        inputArea.innerHTML = "GOODBYE";
     }
 }
 //Adds number to the input area
@@ -27,14 +29,9 @@ function onOff(button) {
 function onNumberClick(num) {
     let number = num;
     if (!power) return;
+    if (input.toString().length > 7) return;
+    if (negativeActive) (number *= -1), (negativeActive = false);
     operatorActive = false;
-    if (input.toString().length > 7) {
-        return;
-    }
-    if (negativeActive) {
-        number *= -1;
-        negativeActive = false;
-    }
     if (decimalActive && input < 0) {
         input =
             Math.round(
@@ -67,8 +64,9 @@ const decimalClick = () => {
 };
 //clears the input, on second click clears the output
 //needs to clear the equals sign on first click
-function clearInput() {
-    if (input === 0) {
+//if equals is active needs to full clear
+function clearInput(bool) {
+    if (input === 0 || bool) {
         output = "";
         formulaArray = [];
         outputArea.innerHTML = "";
@@ -84,9 +82,9 @@ function operatorClick(oper) {
     if (!power) return;
     operatorActive = true;
     if (input === 0 && oper === " - ") negativeActive = true;
-    arrayPush(input, oper);
+    formulaArray.push(input, oper);
     manageOutput(oper);
-    clearInput();
+    clearInput(false);
     console.log(formulaArray);
 }
 
@@ -113,36 +111,34 @@ function solveEquation() {
         return;
     }
     //NOT WORKING -- trying to use this to pop off unused operators
+    formulaArray.push(input);
     if (operatorActive) {
         formulaArray.pop();
         operatorActive = false;
     }
-    arrayPush(input, 0);
-    formulaArray.pop();
     manageOutput(" = ");
 
-    formulaArray.map((term, index) => {
-        if (term === " ÷ ") {
-            const equals = formulaArray[index - 1] / formulaArray[index + 1];
-            formulaArray.splice(index - 1, 3, equals);
+    for (i = 0; i < formulaArray.length; i++) {
+        if (formulaArray[i + 1] === " ÷ ") {
+            formulaArray.splice(i, 3, formulaArray[i] / formulaArray[i + 2]);
+            i--;
         }
-        if (term === " x ") {
-            const equals = formulaArray[index - 1] * formulaArray[index + 1];
-            formulaArray.splice(index - 1, 3, equals);
+        if (formulaArray[i + 1] === " x ") {
+            formulaArray.splice(i, 3, formulaArray[i] * formulaArray[i + 2]);
+            i--;
         }
-    });
-    //maybe switch this to a reduce
-    formulaArray.map((term, index) => {
-        if (term === " + ") {
-            const equals = formulaArray[index - 1] + formulaArray[index + 1];
-            formulaArray.splice(index - 1, 3, equals);
+    }
+
+    for (i = 0; i < 2; i++) {
+        if (formulaArray[i + 1] === " + ") {
+            formulaArray.splice(i, 3, formulaArray[i] + formulaArray[i + 2]);
+            i--;
         }
-        if (term === " - ") {
-            const equals = formulaArray[index - 1] - formulaArray[index + 1];
-            formulaArray.splice(index - 1, 3, equals);
+        if (formulaArray[i + 1] === " - ") {
+            formulaArray.splice(i, 3, formulaArray[i] - formulaArray[i + 2]);
+            i--;
         }
-        console.log(formulaArray);
-    });
+    }
 
     input = formulaArray[0];
     //rounds the answer to specific decimal points to keep it within the 8 char range for the calculator
@@ -168,5 +164,3 @@ function solveEquation() {
     inputArea.innerHTML = input;
     formulaArray = [];
 }
-
-const arrayPush = (input, oper) => formulaArray.push(input, oper);

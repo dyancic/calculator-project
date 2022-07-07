@@ -48,8 +48,7 @@ body {
   align-items: flex-end;
   width: 326px;
   height: 180px;
-  background: rgb(0, 0, 0);
-  background: linear-gradient(0deg, rgb(27, 27, 27) 0%, rgb(0, 23, 3) 20%, rgb(20, 20, 20) 70%);
+  background: linear-gradient(0deg, rgb(27, 27, 27) 2%, rgb(0, 23, 3) 20%, rgb(20, 20, 20) 40%);
   margin-top: 2px;
   border-radius: 10px;
   border: 7px double #aeb39f;
@@ -147,8 +146,4 @@ span {
 button:active {
   transform: scale(0.95);
   transition: transform 0.05s;
-}
-
-button:disabled {
-  background-color: black;
 }
