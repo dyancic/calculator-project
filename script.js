@@ -1,16 +1,30 @@
+//TODO
+//Modular code
+
 let input = 0;
 let output = 0;
 let formulaArray = [];
 let decimalActive = false;
 let operatorActive = false;
 let negativeActive = false;
+let equalActive = false;
 let power = true;
 let decimalIncrement = 1;
 const inputArea = document.getElementById("calcInput");
 const outputArea = document.getElementById("calcOutput");
-const allButtons = document.querySelectorAll(".calc__button");
-const allNumbers = document.querySelectorAll(".calc__number");
-const equalId = document.getElementById("buttonEqual");
+
+//keyboard
+window.addEventListener("keydown", (event) => {
+    if (Number(event.key) > -1) onNumberClick(Number(event.key));
+    if (event.key === "/") operatorClick(" ÷ ");
+    if (event.key === "*") operatorClick(" x ");
+    if (event.key === "+" || event.key === "-") operatorClick(` ${event.key} `);
+    if (event.key === ".") decimalClick();
+    if (event.key === "Enter") solveEquation();
+    if (event.key === "Backspace") clearInput(false);
+    console.log(event.key);
+});
+
 //turns the calculator on and off
 function onOff(button) {
     if (button === "on") {
@@ -24,10 +38,11 @@ function onOff(button) {
         inputArea.innerHTML = "GOODBYE";
     }
 }
+
 //Adds number to the input area
-//!!Need to add if equalActive to clear the input
 function onNumberClick(num) {
     let number = num;
+    if (equalActive) clearInput(true), (equalActive = false);
     if (!power) return;
     if (input.toString().length > 7) return;
     if (negativeActive) (number *= -1), (negativeActive = false);
@@ -62,9 +77,8 @@ function onNumberClick(num) {
 const decimalClick = () => {
     if (power) decimalActive = true;
 };
+
 //clears the input, on second click clears the output
-//needs to clear the equals sign on first click
-//if equals is active needs to full clear
 function clearInput(bool) {
     if (input === 0 || bool) {
         output = "";
@@ -77,7 +91,7 @@ function clearInput(bool) {
     inputArea.innerHTML = "";
 }
 
-//if input is zero make input a negative number
+//on operator click pushes input and the operator to the storage array
 function operatorClick(oper) {
     if (!power) return;
     operatorActive = true;
@@ -88,7 +102,7 @@ function operatorClick(oper) {
     console.log(formulaArray);
 }
 
-//Function for the output
+//Function for what appears above the input area
 function manageOutput(oper) {
     if (outputArea.innerText.length > 70 || input === 0) errorMessage();
     output = "";
@@ -98,12 +112,14 @@ function manageOutput(oper) {
         : (outputArea.innerHTML = output);
 }
 
+//could remove this and just solve equation if the array is getting too long to fit the calculator
 function errorMessage() {
     input = 0;
     clearInput();
     inputArea.innerHTML = "ERROR";
 }
 
+//on equals
 function solveEquation() {
     if (!power) return;
     if (formulaArray.length === 1) {
@@ -117,6 +133,7 @@ function solveEquation() {
         operatorActive = false;
     }
     manageOutput(" = ");
+    equalActive = true;
 
     for (i = 0; i < formulaArray.length; i++) {
         if (formulaArray[i + 1] === " ÷ ") {
@@ -142,9 +159,10 @@ function solveEquation() {
 
     input = formulaArray[0];
     //rounds the answer to specific decimal points to keep it within the 8 char range for the calculator
-    //exponential returns a string to the input which can break the calc
     if (input >= 100000 || input <= -10000) {
-        input = input.toExponential(2);
+        inputArea.innerHTML = input.toExponential(2);
+        formulaArray = [];
+        return;
     } else if (input >= 10000 || input <= -1000) {
         input = Math.round((formulaArray[0] + Number.EPSILON) * 100) / 100;
     } else if (input >= 1000 || input <= -100) {
@@ -158,8 +176,6 @@ function solveEquation() {
         input =
             Math.round((formulaArray[0] + Number.EPSILON) * 1000000) / 1000000;
     }
-
-    //input = Math.round((formulaArray[0] + Number.EPSILON) * 1000000) / 1000000;
 
     inputArea.innerHTML = input;
     formulaArray = [];
