@@ -1,122 +1,111 @@
-//TODO
-//Modular code
-
-let input = 0;
+// if character length in output is exc eeding 70 hit a solve
+let input = "";
 let output = 0;
 let formulaArray = [];
-let decimalActive = false;
 let operatorActive = false;
-let negativeActive = false;
 let equalActive = false;
-let power = true;
-let decimalIncrement = 1;
+let power = false;
 const inputArea = document.getElementById("calcInput");
 const outputArea = document.getElementById("calcOutput");
+const numberButton = document.querySelectorAll(".calc__number");
+const operatorButton = document.querySelectorAll(".calc__operator");
+const equalButton = document.getElementById("buttonEqual");
+const clearButton = document.getElementById("buttonClear");
+const screen = document.querySelector("#screen");
 
 //keyboard
-window.addEventListener("keydown", (event) => {
-    if (Number(event.key) > -1) onNumberClick(Number(event.key));
+document.addEventListener("keypress", (event) => {
+    if (Number(event.key) > -1) onNumberClick(event.key);
     if (event.key === "/") operatorClick(" ÷ ");
-    if (event.key === "*") operatorClick(" x ");
+    if (event.key === "*" || event.key === "x") operatorClick(" x ");
     if (event.key === "+" || event.key === "-") operatorClick(` ${event.key} `);
     if (event.key === ".") decimalClick();
     if (event.key === "Enter") solveEquation();
-    if (event.key === "Backspace") clearInput(false);
+    if (event.key === "Backspace" || event.key === "c") clearInput(false);
+    event.stopImmediatePropagation;
     console.log(event.key);
 });
 
-//turns the calculator on and off
-function onOff(button) {
-    if (button === "on") {
-        power = true;
-        inputArea.innerHTML = "HELLO";
+// buttons
+Array.from(numberButton).forEach((button) => {
+    button.addEventListener("click", () => onNumberClick(button.value));
+});
+
+//operators
+Array.from(operatorButton).forEach((button) => {
+    button.addEventListener("click", () => operatorClick(button.value));
+});
+
+//Equal
+equalButton.addEventListener("click", () => solveEquation());
+
+//Clear
+clearButton.addEventListener("click", () => clearInput(false));
+
+//onOff
+document.getElementById("on").addEventListener("click", () => {
+    if (!power) {
+        inputArea.innerHTML = "hello";
+        screen.classList.remove("calc__screen--off");
+        setTimeout(() => ((inputArea.innerHTML = ""), (power = true)), 2000);
     }
-    console.log(power);
-    if (button === "off") {
+});
+
+document.getElementById("off").addEventListener("click", () => {
+    if (power) {
         power = false;
         clearInput(true);
         inputArea.innerHTML = "GOODBYE";
+        screen.classList.add("calc__screen--off");
+        setTimeout(() => (inputArea.innerHTML = ""), 2000);
     }
-}
+});
 
 //Adds number to the input area
 function onNumberClick(num) {
-    let number = num;
+    if (!power || input.toString().length > 7) return;
     if (equalActive) clearInput(true), (equalActive = false);
-    if (!power) return;
-    if (input.toString().length > 7) return;
-    if (negativeActive) (number *= -1), (negativeActive = false);
     operatorActive = false;
-    if (decimalActive && input < 0) {
-        input =
-            Math.round(
-                (input - number / 10 ** decimalIncrement) *
-                    10 ** decimalIncrement,
-            ) /
-            10 ** decimalIncrement;
-        inputArea.innerHTML = input.toFixed(decimalIncrement);
-        decimalIncrement++;
-    } else if (decimalActive && input > 0) {
-        input =
-            Math.round(
-                (input + number / 10 ** decimalIncrement) *
-                    10 ** decimalIncrement,
-            ) /
-            10 ** decimalIncrement;
-        inputArea.innerHTML = input.toFixed(decimalIncrement);
-        decimalIncrement++;
-    } else if (input < 0) {
-        input = input * 10 - num;
-        inputArea.innerHTML = input;
-    } else {
-        input = input * 10 + number;
-        inputArea.innerHTML = input;
-    }
+    num === "." && input === "" ? (input = "0.") : (input += num);
+    inputArea.innerHTML = input;
 }
-
-const decimalClick = () => {
-    if (power) decimalActive = true;
-};
 
 //clears the input, on second click clears the output
 function clearInput(bool) {
-    if (input === 0 || bool) {
+    if (input === "" || bool) {
         output = "";
         formulaArray = [];
         outputArea.innerHTML = "";
     }
-    input = 0;
-    decimalIncrement = 1;
-    decimalActive = false;
+    input = "";
     inputArea.innerHTML = "";
 }
 
 //on operator click pushes input and the operator to the storage array
 function operatorClick(oper) {
-    if (!power) return;
+    if (input === "" && oper === " - ") {
+        input = "-";
+        inputArea.innerHTML = input;
+        return;
+    }
+    if (!power || operatorActive) return;
+    equalActive = false;
     operatorActive = true;
-    if (input === 0 && oper === " - ") negativeActive = true;
-    formulaArray.push(input, oper);
+    if (outputArea.innerText.length > 70) solveEquation();
+    formulaArray.push(parseFloat(input), oper);
     manageOutput(oper);
     clearInput(false);
     console.log(formulaArray);
+    inputArea.innerHTML = input;
 }
 
 //Function for what appears above the input area
 function manageOutput(oper) {
-    if (outputArea.innerText.length > 70 || input === 0) errorMessage();
     output = "";
     formulaArray.map((term) => (output += term.toString()));
     oper === " = "
         ? (outputArea.innerHTML = `${output}${oper}`)
         : (outputArea.innerHTML = output);
-}
-
-//could remove this and just solve equation if the array is getting too long to fit the calculator
-function errorMessage() {
-    input = 0;
-    clearInput();
-    inputArea.innerHTML = "ERROR";
 }
 
 //on equals
@@ -126,15 +115,9 @@ function solveEquation() {
         input = formulaArray[0];
         return;
     }
-    //NOT WORKING -- trying to use this to pop off unused operators
-    formulaArray.push(input);
-    if (operatorActive) {
-        formulaArray.pop();
-        operatorActive = false;
-    }
+    formulaArray.push(parseFloat(input));
     manageOutput(" = ");
     equalActive = true;
-
     for (i = 0; i < formulaArray.length; i++) {
         if (formulaArray[i + 1] === " ÷ ") {
             formulaArray.splice(i, 3, formulaArray[i] / formulaArray[i + 2]);
@@ -157,26 +140,26 @@ function solveEquation() {
         }
     }
 
-    input = formulaArray[0];
-    //rounds the answer to specific decimal points to keep it within the 8 char range for the calculator
-    if (input >= 100000 || input <= -10000) {
-        inputArea.innerHTML = input.toExponential(2);
+    input = formulaArray[0].toString();
+    // rounds the answer to specific decimal points to keep it within the 8 char range for the calculator
+    if (formulaArray[0] >= 100000 || formulaArray[0] <= -10000) {
+        inputArea.innerHTML = formulaArray[0].toExponential(3);
         formulaArray = [];
         return;
-    } else if (input >= 10000 || input <= -1000) {
-        input = Math.round((formulaArray[0] + Number.EPSILON) * 100) / 100;
-    } else if (input >= 1000 || input <= -100) {
-        input = Math.round((formulaArray[0] + Number.EPSILON) * 1000) / 1000;
-    } else if (input >= 100 || input <= -10) {
-        input = Math.round((formulaArray[0] + Number.EPSILON) * 10000) / 10000;
-    } else if (input >= 10 || input <= -1) {
-        input =
-            Math.round((formulaArray[0] + Number.EPSILON) * 100000) / 100000;
-    } else {
-        input =
-            Math.round((formulaArray[0] + Number.EPSILON) * 1000000) / 1000000;
     }
-
+    const splitStr = input.split(".");
+    console.log(splitStr);
+    if (splitStr[0].length > 4 && splitStr[1].length > 1)
+        input = formulaArray[0].toFixed(2);
+    else if (splitStr[0].length > 3 && splitStr[1].length > 2)
+        input = formulaArray[0].toFixed(3);
+    else if (splitStr[0].length > 2 && splitStr[1].length > 3)
+        input = formulaArray[0].toFixed(4);
+    else if (splitStr[0].length > 1 && splitStr[1].length > 4)
+        input = formulaArray[0].toFixed(5);
+    else if (splitStr[1].length > 5) {
+        input = formulaArray[0].toFixed(6);
+    }
     inputArea.innerHTML = input;
     formulaArray = [];
 }
