@@ -5,6 +5,7 @@ let formulaArray = [];
 let operatorActive = false;
 let equalActive = false;
 let power = false;
+let decimalActive = false;
 const inputArea = document.getElementById("calcInput");
 const outputArea = document.getElementById("calcOutput");
 const numberButton = document.querySelectorAll(".calc__number");
@@ -13,6 +14,7 @@ const equalButton = document.getElementById("buttonEqual");
 const clearButton = document.getElementById("buttonClear");
 const screen = document.querySelector("#screen");
 
+////LISTENERS
 //keyboard
 document.addEventListener("keypress", (event) => {
     if (Number(event.key) > -1) onNumberClick(event.key);
@@ -27,12 +29,12 @@ document.addEventListener("keypress", (event) => {
 });
 
 // buttons
-Array.from(numberButton).forEach((button) => {
+numberButton.forEach((button) => {
     button.addEventListener("click", () => onNumberClick(button.value));
 });
 
 //operators
-Array.from(operatorButton).forEach((button) => {
+operatorButton.forEach((button) => {
     button.addEventListener("click", () => operatorClick(button.value));
 });
 
@@ -56,17 +58,25 @@ document.getElementById("off").addEventListener("click", () => {
         power = false;
         clearInput(true);
         inputArea.innerHTML = "GOODBYE";
-        screen.classList.add("calc__screen--off");
-        setTimeout(() => (inputArea.innerHTML = ""), 2000);
+
+        setTimeout(() => {
+            inputArea.innerHTML = "";
+            screen.classList.add("calc__screen--off");
+        }, 2000);
     }
 });
 
+////FUNCTIONS
 //Adds number to the input area
 function onNumberClick(num) {
     if (!power || input.toString().length > 7) return;
     if (equalActive) clearInput(true), (equalActive = false);
     operatorActive = false;
-    num === "." && input === "" ? (input = "0.") : (input += num);
+    if (num === ".") {
+        if (decimalActive) return;
+        input === "" ? (input = "0.") : (input += num);
+        decimalActive = true;
+    } else input += num;
     inputArea.innerHTML = input;
 }
 
@@ -79,16 +89,17 @@ function clearInput(bool) {
     }
     input = "";
     inputArea.innerHTML = "";
+    decimalActive = false;
 }
 
 //on operator click pushes input and the operator to the storage array
 function operatorClick(oper) {
+    if (!power || operatorActive) return;
     if (input === "" && oper === " - ") {
         input = "-";
         inputArea.innerHTML = input;
         return;
     }
-    if (!power || operatorActive) return;
     equalActive = false;
     operatorActive = true;
     if (outputArea.innerText.length > 70) solveEquation();
@@ -101,6 +112,7 @@ function operatorClick(oper) {
 
 //Function for what appears above the input area
 function manageOutput(oper) {
+    decimalActive = false;
     output = "";
     formulaArray.map((term) => (output += term.toString()));
     oper === " = "
@@ -147,18 +159,18 @@ function solveEquation() {
         formulaArray = [];
         return;
     }
+    //for loop that keeps the answer within 8 char limit if needed
     const splitStr = input.split(".");
-    console.log(splitStr);
-    if (splitStr[0].length > 4 && splitStr[1].length > 1)
-        input = formulaArray[0].toFixed(2);
-    else if (splitStr[0].length > 3 && splitStr[1].length > 2)
-        input = formulaArray[0].toFixed(3);
-    else if (splitStr[0].length > 2 && splitStr[1].length > 3)
-        input = formulaArray[0].toFixed(4);
-    else if (splitStr[0].length > 1 && splitStr[1].length > 4)
-        input = formulaArray[0].toFixed(5);
-    else if (splitStr[1].length > 5) {
-        input = formulaArray[0].toFixed(6);
+    let dec = 4;
+    let inc = 1;
+    if (splitStr[1]) {
+        for (let i = 2; i < 7; i++) {
+            if (splitStr[0].length > dec && splitStr[1].length > inc) {
+                input = formulaArray[0].toFixed(i);
+                break;
+            }
+            inc++, dec--;
+        }
     }
     inputArea.innerHTML = input;
     formulaArray = [];
