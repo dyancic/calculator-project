@@ -1,4 +1,3 @@
-// if character length in output is exc eeding 70 hit a solve
 let input = "";
 let output = 0;
 let formulaArray = [];
@@ -16,6 +15,7 @@ const screen = document.querySelector("#screen");
 
 ////LISTENERS
 //keyboard
+//change to switch statement
 document.addEventListener("keypress", (event) => {
     if (Number(event.key) > -1) onNumberClick(event.key);
     if (event.key === "/") operatorClick(" ÷ ");
@@ -49,7 +49,10 @@ document.getElementById("on").addEventListener("click", () => {
     if (!power) {
         inputArea.innerHTML = "hello";
         screen.classList.remove("calc__screen--off");
-        setTimeout(() => ((inputArea.innerHTML = ""), (power = true)), 2000);
+        setTimeout(() => {
+            inputArea.innerHTML = "";
+            power = true;
+        }, 2000);
     }
 });
 
@@ -69,14 +72,21 @@ document.getElementById("off").addEventListener("click", () => {
 ////FUNCTIONS
 //Adds number to the input area
 function onNumberClick(num) {
-    if (!power || input.toString().length > 7) return;
+    if (!power || input.length > 7) return;
     if (equalActive) clearInput(true), (equalActive = false);
+
     operatorActive = false;
+
     if (num === ".") {
         if (decimalActive) return;
         input === "" ? (input = "0.") : (input += num);
         decimalActive = true;
     } else input += num;
+
+    if (!decimalActive && input[0] === "0" && input.length > 1) {
+        input = input.substring(1);
+    }
+
     inputArea.innerHTML = input;
 }
 
@@ -153,9 +163,8 @@ function solveEquation() {
     }
 
     input = formulaArray[0].toString();
-    // rounds the answer to specific decimal points to keep it within the 8 char range for the calculator
     if (formulaArray[0] >= 100000 || formulaArray[0] <= -10000) {
-        inputArea.innerHTML = formulaArray[0].toExponential(3);
+        inputArea.innerHTML = formulaArray[0].toExponential(2);
         formulaArray = [];
         return;
     }
