@@ -1,8 +1,9 @@
 # Calculator Project
 
-![alt text](./calculator-base.jpg)
+<img src="./img/calculator-base.jpg" />
+<img src="./img/calc.png" height="300px" />
 
-### Task breakdown
+## Task breakdown
 
 1. Make a html/css replica of the image above.
 
@@ -19,3 +20,7 @@
 
     - Find a way to finish the calculation if multiple operators are used
     -
+
+## Design goals
+
+-   played with box-shadows and linear gradients to create a 3D feeling
