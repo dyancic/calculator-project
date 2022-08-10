@@ -15,7 +15,6 @@
     - Store the values for calculations in js and an output area that holds the calculation when equals is pressed
     - maximum 8 characters on the calculator at a time
     - add keyboard functionality
-<<<<<<< HEAD
 
 3. Write functions for each math operation
 
@@ -25,5 +24,3 @@
 ## Design goals
 
 -   played with box-shadows and linear gradients to create a 3D feeling
-=======
->>>>>>> d96cd77f53d51a4b19a969b67beed5a8229d0e16
