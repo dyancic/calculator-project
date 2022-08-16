@@ -90,7 +90,7 @@ function onNumberClick(num) {
     inputArea.innerHTML = input;
 }
 
-//clears the input, on second click clears the output
+//clears the display, on second click clears any saved equation
 function clearInput(bool) {
     if (input === "" || bool) {
         output = "";
